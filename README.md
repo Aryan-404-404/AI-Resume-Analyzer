@@ -27,9 +27,16 @@ This application uses the **Google Gemini 2.5 Flash-Lite** model to perform a de
 * **Frontend:** React.js (Vite)
 * **Styling:** Tailwind CSS
 * **AI Engine:** Google Gemini API (`gemini-2.5-flash-lite`)
+* **PDF Engine:** `pdfjs-dist` (The heavy lifter for client-side parsing)
 * **State Management:** React Hooks
 * **Build Tool:** Vite
 
+## 🧠 Challenges & Learnings
+
+Building this wasn't just about calling an API. The biggest technical hurdle was **Client-Side PDF Parsing**.
+* **The Problem:** integrating `pdfjs-dist` with Vite requires complex worker configuration to avoid "Global is not defined" errors and ensure text is extracted correctly from binary PDF data.
+* **The Solution:** Implemented a custom worker handler to parse PDFs directly in the browser without needing a heavy backend server, ensuring user privacy and speed.
+* **The Outcome:** A zero-latency parsing engine that handles complex resume layouts instantly.
 ---
 
 ## 💻 Installation & Setup
