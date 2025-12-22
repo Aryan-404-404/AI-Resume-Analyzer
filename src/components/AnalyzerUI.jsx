@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { runGemini } from '../lib/gemini';
+import { runGroq } from '../lib/groq';
 import ResultsCard from './ResultsCard';
 import FileDragDrop from './FileDragDrop';
 import Navbar from './Navbar';
@@ -19,45 +19,67 @@ export default function AnalyzerUI() {
         setToast({ show: true, message, type });
     };
 
-    const handleRoast = async () => {
-        if (!resumeText && !jobText) {
-            showToast("Please upload a resume first!", "error"); // Example usage
-            return;
-        }
-        setisLoading(true)
-        setresult("")
-        try {
-            const prompt = customPrompt(resumeText, jobText);
-            const rawText = await runGemini(prompt);
-            let cleanJson = rawText
-                .replace(/```json\n?/gi, '')
-                .replace(/```\n?/g, '')
-                .trim();
-
-            const firstBrace = cleanJson.indexOf('{');
-            const lastBrace = cleanJson.lastIndexOf('}');
-
-            if (firstBrace !== -1 && lastBrace !== -1) {
-                cleanJson = cleanJson.substring(firstBrace, lastBrace + 1);
-            }
-            const parsedData = JSON.parse(cleanJson);
-            setresult(parsedData)
-            setIsResponse(true)
-        }
-        catch (error) {
-            console.error("Roast failed:", error);
-            const errorMessage = error.toString().toLowerCase();
-
-            if (errorMessage.includes("429") || errorMessage.includes("quota") || errorMessage.includes("limit")) {
-                showToast("⏳ Free Tier Limit Reached. Please wait 60s.", "warning");
-            } else {
-                showToast("Analysis failed. Please try again.", "error");
-            }
-        }
-        finally {
-            setisLoading(false)
-        }
+    const formatSummary = (summaryText) => {
+    if (!summaryText) return '';
+    
+    return summaryText
+        .replace(/STRENGTHS:/g, '✅ STRENGTHS:')
+        .replace(/GAPS:/g, '❌ GAPS:')
+        .replace(/QUICK FIXES/g, '⚡ QUICK FIXES')
+        .replace(/MEDIUM-TERM/g, '🔧 MEDIUM-TERM')  
+        .replace(/LONG-TERM/g, '🎯 LONG-TERM')
+        .replace(/RESUME TIP:/g, '💡 RESUME TIP:');
     };
+
+const handleRoast = async () => {
+    if (!resumeText && !jobText) {
+        showToast("Please upload a resume first!", "error");
+        return;
+    }
+    
+    setisLoading(true);
+    setresult("");
+    
+    try {
+        const prompt = customPrompt(resumeText, jobText);
+        const rawText = await runGroq(prompt);
+        
+        // Clean up markdown
+        let cleaned = rawText
+            .replace(/```json/g, '')
+            .replace(/```/g, '')
+            .trim();
+        
+        // Find the JSON part
+        const start = cleaned.indexOf('{');
+        const end = cleaned.lastIndexOf('}') + 1;
+        
+        if (start !== -1 && end > start) {
+            cleaned = cleaned.substring(start, end);
+        }
+        
+        // Parse it
+        const parsedData = JSON.parse(cleaned);
+
+        if (parsedData.summary) {
+            parsedData.summary = formatSummary(parsedData.summary);
+        }
+        
+        setresult(parsedData);
+        setIsResponse(true);
+        
+    } catch (error) {
+        console.error("Error:", error);
+        
+        if (error.toString().includes("429") || error.toString().includes("quota")) {
+            showToast("Rate limit hit. Wait 60 seconds.", "warning");
+        } else {
+            showToast("Failed. Try again.", "error");
+        }
+    } finally {
+        setisLoading(false);
+    }
+};
 
 
     return (
@@ -103,7 +125,6 @@ export default function AnalyzerUI() {
                                     label="📄 Your Resume"
                                     onTextExtract={(text) => setresumeText(text)}
                                 />
-
                             </div>
                             <div className="bg-gray-800 p-6 rounded-2xl border border-gray-700 shadow-lg">
                                 <label className="block text-xl font-semibold text-white mb-4">
@@ -125,7 +146,7 @@ export default function AnalyzerUI() {
                         {/* The Disclaimer */}
                         <p className="mt-20 text-xs text-slate-500 text-center">
                             <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></span>
-                            Powered by Gemini AI (Free Tier).
+                            Powered by Groq AI (Free Tier).
                             <span className="block sm:inline sm:ml-1">
                                 If analysis fails, please wait 1 minute and try again.
                             </span>

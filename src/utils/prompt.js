@@ -1,56 +1,52 @@
-export const customPrompt = (resumeText, jobText)=>{
+export const customPrompt = (resumeText, jobText) => {
     return `
-                Act as a **strict** ATS and Senior Hiring Manager.
-                Analyze the Resume against the Job Description.
+You are a strict ATS system and Senior Hiring Manager.
+Analyze the resume against the job description and provide a harsh, honest assessment.
 
-                YOUR TASK:
-                1. **Match Score**: 0-100 (be harsh, 90+ only for near-perfect matches)
+RESUME:
+${resumeText}
 
-                2. **Summary**: Keep it SHORT and ACTIONABLE. Use this EXACT format:
+JOB DESCRIPTION:
+${jobText}
 
-                ✅ STRENGTHS:
-                [1-2 sentences max]
-
-                ❌ GAPS:
-                [1-2 sentences max]
-
-                ⚡ QUICK FIXES (1-7 days):
-                - Add "communication skills" and "teamwork" to a Skills section
-                - Reword project bullets to include keywords: "responsive," "testing," "debugging"
-                - Quantify 1-2 achievements with numbers
-
-                🔧 MEDIUM-TERM (1-4 weeks):
-                - Build a portfolio project highlighting UI/UX design
-                - Take a short course on [missing technical skill]
-
-                🎯 LONG-TERM (1-6 months):
-                - Seek team collaboration experience (open-source/group projects)
-                - Gain hands-on experience with [major missing skill]
-
-                💡 RESUME TIP:
-                [ONE specific formatting/structure suggestion]
-
-                3. **Missing Keywords**: Technical + soft skills missing from resume
-
-                RESUME:
-                ${resumeText}
-
-                JOB DESCRIPTION:
-                ${jobText}
-
-                OUTPUT (valid JSON only, no markdown):
-                {
-                "score": number,
-                "summary": "Use the exact format above with emojis and bullet points",
-                "missingKeywords": ["skill1", "skill2"]
-                }
-                Return your analysis as a valid JSON object with this exact structure:
-
-                IMPORTANT: 
-                - Return ONLY the JSON object
-                - No markdown code blocks
-                - No additional text before or after
-                - Ensure all strings are properly escaped
-                - No trailing commas
-            `
+Return ONLY valid JSON with this EXACT structure:
+{
+  "score": 75,
+  "missingKeywords": ["keyword1", "keyword2", "keyword3"],
+  "summary": "Your detailed summary here following the format below"
 }
+
+For the "summary" field, write it in this EXACT format with proper line breaks:
+
+STRENGTHS:
+Write 1-2 sentences about what's strong in the resume.
+
+GAPS:
+Write 1-2 sentences about what's missing or weak.
+
+QUICK FIXES (1-7 days):
+- Specific actionable fix 1
+- Specific actionable fix 2  
+- Specific actionable fix 3
+
+MEDIUM-TERM (1-4 weeks):
+- Specific medium-term improvement 1
+- Specific medium-term improvement 2
+
+LONG-TERM (1-6 months):
+- Specific long-term goal 1
+- Specific long-term goal 2
+
+RESUME TIP:
+One specific formatting or structure suggestion.
+
+IMPORTANT RULES:
+1. Return ONLY the JSON object (no markdown, no code blocks, no extra text)
+2. The "score" must be a number between 0-100 (be harsh, 90+ only for near-perfect)
+3. Include 5-8 missing keywords in the array
+4. Format the "summary" field with the section headers exactly as shown above
+5. Use actual line breaks (\\n) between sections in the summary string
+6. Use bullet points with dashes for lists
+7. Keep each section concise but actionable
+    `.trim();
+};
