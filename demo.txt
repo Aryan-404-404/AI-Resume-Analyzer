@@ -1,0 +1,69 @@
+Profile
+Final-year BCA student proficient in **Java, Data Structures, and the MERN Stack**. Experienced in building full-stack
+applications with AI integration and role-based security. Passionate about solving complex algorithmic problems.
+Education
+DIT University Dehradun, Uttarakhand
+Bachelor of Computer Applications (BCA); CGPA: 8.65 2023 – 2026
+Schooling (Uttarakhand Board)
+Class XII: 75.4% | Class X: 82.2% Completed 2023
+Technical Skills
+Languages: Java, C, JavaScript (ES6+), SQL
+Frontend: React.js, Tailwind CSS, HTML5, CSS3
+Backend: Node.js, Express.js, MongoDB (Mongoose), RESTful APIs
+Tools & Concepts: Git/GitHub, Postman, JWT Auth, Data Structures & Algorithms (DSA)
+Projects
+AI-Powered Expense Tracker | MERN Stack, Gemini API, Recharts Sep 2025
+• Developed a full-stack financial application with secure authentication using BCrypt.js and JWT.
+• Integrated Google’s Gemini AI API to build a chatbot that analyzes spending habits and provides budget
+advice.
+• Implemented real-time data visualization using Recharts to track income vs. expenses.
+Hotel Booking Management System | Node.js, Express, MongoDB, EJS
+• Engineered a booking platform featuring Role-Based Access Control (RBAC) for Admins and Users.
+• Built a dynamic Admin Dashboard to manage room inventory, customer bookings, and live status updates.
+• Designed RESTful APIs to handle CRUD operations and implemented secure session management.
+Achievements
+DSA Proficiency: Solved 175+ problems across various coding platforms, focusing on Logic Building.
+SQL Skills: Solved 50+ problems on LeetCode, mastering complex queries and joins.
+Coursework
+Core Subjects: Data Structures & Algorithms, Object Oriented Programming (OOPS), DBMS, Operating Systems
+Development: Full Stack Web Development (MERN)
+
+
+JD----------------------->
+Full Stack Web Developer Intern (Paid)
+Company: UM IT Solutions
+Location: Remote
+Duration: 3 Months
+Employment Opportunity: Potential full-time role based on performance + Certificate of Internship
+Application Deadline: 15th December 2025
+About UM IT Solutions
+
+UM IT Solutions provides students and graduates with practical learning opportunities in web development, helping them gain hands-on experience in both front-end and back-end development. Interns work on real-world projects to strengthen their skills, build portfolios, and prepare for a professional career in web technologies.
+Role Overview
+
+As a Full Stack Web Developer Intern, you will work on live projects, contributing to both front-end and back-end development. This internship allows you to enhance your technical expertise, improve problem-solving skills, and gain exposure to industry-standard tools and frameworks.
+Responsibilities
+
+✅ Design, code, and modify websites to ensure functionality and visual appeal.
+✅ Develop responsive and dynamic web pages.
+✅ Test, debug, and optimize websites for a seamless user experience.
+✅ Utilize modern web development tools and frameworks.
+✅ Collaborate with team members to deliver high-quality projects.
+Requirements
+
+🎓 Currently enrolled in or recently graduated from a relevant program (Computer Science, IT, Web Development, or related fields).
+💻 Proficiency in HTML, CSS, and JavaScript.
+⚛ Familiarity with frameworks such as React, Angular, or Node.js (preferred).
+🗣 Strong communication and teamwork skills.
+Enthusiasm for learning and developing innovative web solutions.
+Benefits
+
+💰 Stipend: ₹7,500 - ₹15,000 (Performance-Based) (Paid)
+🧠 Hands-on web development experience with real-world projects.
+📜 Certificate of Internship & Letter of Recommendation.
+💼 Opportunity to build a professional portfolio and gain industry exposure.
+
+
+{isLoading && (
+            <svg className='h-12' viewBox="0 0 57 60" xmlns="http://www.w3.org/2000/svg" stroke="#88FFE1FF"><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="3"><circle cx="5" cy="50" r="5"><animate attributeName="cy" begin="0s" dur="2.2s" values="50;5;50;50" calcMode="linear" repeatCount="indefinite"/><animate attributeName="cx" begin="0s" dur="2.2s" values="5;27;49;5" calcMode="linear" repeatCount="indefinite"/></circle><circle cx="27" cy="5" r="5"><animate attributeName="cy" begin="0s" dur="2.2s" from="5" to="5" values="5;50;50;5" calcMode="linear" repeatCount="indefinite"/><animate attributeName="cx" begin="0s" dur="2.2s" from="27" to="27" values="27;49;5;27" calcMode="linear" repeatCount="indefinite"/></circle><circle cx="49" cy="50" r="5"><animate attributeName="cy" begin="0s" dur="2.2s" values="50;50;5;50" calcMode="linear" repeatCount="indefinite"/><animate attributeName="cx" from="49" to="49" begin="0s" dur="2.2s" values="49;5;27;49" calcMode="linear" repeatCount="indefinite"/></circle></g></g></svg>
+            )}
