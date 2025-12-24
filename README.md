@@ -7,6 +7,10 @@
 
 **A smart, AI-powered career tool that helps developers optimize their resumes for Applicant Tracking Systems (ATS).**
 
+## 🚀 Live Preview Link
+https://ai-resume-analyzer-pi-ruby.vercel.app/
+
+
 This application uses the **Groq Llama 3.3 70B** model to perform a deep-dive analysis of your resume against specific job descriptions. It provides a detailed match score, identifies missing technical keywords, and offers actionable feedback to help you land more interviews.
 
 ---
