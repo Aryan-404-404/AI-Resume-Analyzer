@@ -28,7 +28,7 @@ This application uses the **Groq Llama 3.3 70B** model to perform a deep-dive an
 
 ## 🛠️ Tech Stack
 
-* **Frontend:** React.js (Vite)
+* **Frontend:** React.js (Vite), TypeScript
 * **Styling:** Tailwind CSS
 * **AI Engine:** Groq API (`llama-3.3-70b-versatile`)
 * **PDF Engine:** `pdfjs-dist` (Client-side PDF parsing)
