@@ -1,7 +1,12 @@
 import React, { useEffect } from 'react';
 
-const Toast = ({ message, type = 'error', onClose }) => {
-  // Auto-dismiss after 5 seconds
+interface ToastPropes{
+  message: string,
+  type?: "warning" | "error" | "success",
+  onClose: ()=>void
+}
+
+const Toast = ({ message, type = 'error', onClose }: ToastPropes) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();

@@ -6,80 +6,70 @@ import Navbar from './Navbar';
 import Heading from './Heading';
 import { customPrompt } from '../utils/prompt';
 import Toast from './Toast';
+import { ResumeFormate } from '../types/resume';
+
+type ToastType = 'error' | 'warning' | 'success';
+
+interface ToastState {
+    show: boolean
+    message: string,
+    type: ToastType
+}
 
 export default function AnalyzerUI() {
     const [resumeText, setresumeText] = useState("")
     const [jobText, setjobText] = useState("")
     const [isLoading, setisLoading] = useState(false)
-    const [result, setresult] = useState("")
+    const [result, setresult] = useState<ResumeFormate | null>(null);
     const [isResponse, setIsResponse] = useState(false)
-    const [toast, setToast] = useState({ show: false, message: '', type: 'error' });
+    const [toast, setToast] = useState<ToastState>({ show: false, message: '', type: 'error' });
 
-    const showToast = (message, type = 'error') => {
+    const showToast = (message: string, type: ToastType): void => {
         setToast({ show: true, message, type });
     };
 
-    const formatSummary = (summaryText) => {
-    if (!summaryText) return '';
-    
-    return summaryText
-        .replace(/STRENGTHS:/g, '✅ STRENGTHS:')
-        .replace(/GAPS:/g, '❌ GAPS:')
-        .replace(/QUICK FIXES/g, '⚡ QUICK FIXES')
-        .replace(/MEDIUM-TERM/g, '🔧 MEDIUM-TERM')  
-        .replace(/LONG-TERM/g, '🎯 LONG-TERM')
-        .replace(/RESUME TIP:/g, '💡 RESUME TIP:');
+    const formatSummary = (summaryText: string): string => {
+        if (!summaryText) return '';
+
+        return summaryText
+            .replace(/STRENGTHS:/g, '✅ STRENGTHS:')
+            .replace(/GAPS:/g, '❌ GAPS:')
+            .replace(/QUICK FIXES/g, '⚡ QUICK FIXES')
+            .replace(/MEDIUM-TERM/g, '🔧 MEDIUM-TERM')
+            .replace(/LONG-TERM/g, '🎯 LONG-TERM')
+            .replace(/RESUME TIP:/g, '💡 RESUME TIP:');
     };
 
-const handleRoast = async () => {
-    if (!resumeText && !jobText) {
-        showToast("Please upload a resume first!", "error");
-        return;
-    }
-    
-    setisLoading(true);
-    setresult("");
-    
-    try {
-        const prompt = customPrompt(resumeText, jobText);
-        const rawText = await runGroq(prompt);
-        
-        // Clean up markdown
-        let cleaned = rawText
-            .replace(/```json/g, '')
-            .replace(/```/g, '')
-            .trim();
-        
-        // Find the JSON part
-        const start = cleaned.indexOf('{');
-        const end = cleaned.lastIndexOf('}') + 1;
-        
-        if (start !== -1 && end > start) {
-            cleaned = cleaned.substring(start, end);
+    const handleRoast = async () => {
+        if (!resumeText && !jobText) {
+            showToast("Please upload a resume first!", "error");
+            return;
         }
-        
-        // Parse it
-        const parsedData = JSON.parse(cleaned);
 
-        if (parsedData.summary) {
-            parsedData.summary = formatSummary(parsedData.summary);
+        setisLoading(true);
+        setresult(null);
+
+        try {
+            const prompt = customPrompt(resumeText, jobText);
+            const result = await runGroq(prompt);
+            if (result.summary) {
+                result.summary = formatSummary(result.summary);
+            }
+            setresult(result);
+            setIsResponse(true);
+        } catch (error) {
+            console.error("Error:", error);
+            if (error instanceof Error) {
+                if (error.toString().includes("429") || error.toString().includes("quota")) {
+                    showToast("Rate limit hit. Wait 60 seconds.", "warning");
+                } else {
+                    showToast("Failed. Try again.", "error");
+                }
+            }
+        } finally {
+            setisLoading(false);
         }
-        
-        setresult(parsedData);
-        setIsResponse(true);
-        
-    } catch (error) {
-        console.error("Error:", error);
-        
-        if (error.toString().includes("429") || error.toString().includes("quota")) {
-            showToast("Rate limit hit. Wait 60 seconds.", "warning");
-        } else {
-            showToast("Failed. Try again.", "error");
-        }
-    } finally {
-        setisLoading(false);
-    }
-};
+    };
 
 
     return (
@@ -103,14 +93,21 @@ const handleRoast = async () => {
                 ) : result && isResponse ? (
                     <div className="w-full mx-auto animate-fade-in">
                         <div className="my-4 flex justify-center">
+                            {/* Analyze Another Resume button */}
                             <button
                                 onClick={() => {
                                     setIsResponse(false);
                                     setresult(null);
                                 }}
-                                className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105 flex items-center gap-2"
+                                className="group relative flex items-center gap-2 px-7 py-3 rounded-2xl text-sm font-bold
+                                       text-white overflow-hidden cursor-pointer
+                                       bg-[#161b22] border border-white/10
+                                       hover:-translate-y-0.5 hover:border-purple-500/40 hover:shadow-[0_0_24px_rgba(168,85,247,0.2)]
+                                       transition-all duration-150"
                             >
-                                ⬅️ Analyze Another Resume
+                                <span className="absolute inset-0 bg-linear-to-br from-violet-700/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                                <span className="relative z-10 text-base">⬅️</span>
+                                <span className="relative z-10">Analyze Another Resume</span>
                             </button>
                         </div>
                         <div className="flex justify-center">
@@ -119,7 +116,7 @@ const handleRoast = async () => {
                     </div>
                 ) : (
                     <>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="h-full bg-gray-800 p-6 rounded-2xl border border-gray-700 shadow-lg">
                                 <FileDragDrop
                                     label="📄 Your Resume"
@@ -133,9 +130,26 @@ const handleRoast = async () => {
                                 <textarea onChange={(e) => { setjobText(e.target.value) }} className='w-full h-80 bg-gray-900 text-white p-4 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none resize-none whitespace-pre-wrap wrap-break-word' />
                             </div>
                         </div>
+
                         <div className="mt-10 flex justify-center">
-                            <button disabled={isLoading} onClick={handleRoast} className='bg-linear-to-r from-orange-600 to-red-600 text-white font-bold py-4 px-10 rounded-full text-xl hover:scale-105 transition transform shadow-xl cursor-pointer disabled:opacity-5 disabled:cursor-not-allowed disabled:hover:scale-100'>ANALYZE MY RESUME 🔍</button>
+                            {/* Analyze button */}
+                            <button
+                                disabled={isLoading}
+                                onClick={handleRoast}
+                                className="group relative flex items-center gap-3 px-10 py-4 rounded-2xl text-base font-bold
+                                       text-white overflow-hidden cursor-pointer
+                                       bg-linear-to-br from-violet-700 to-purple-500
+                                       hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_8px_32px_rgba(168,85,247,0.45)]
+                                       active:translate-y-0 active:brightness-95
+                                       disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:brightness-100 disabled:hover:shadow-none
+                                       transition-all duration-150"
+                            >
+                                <span className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                                <span className="relative z-10">ANALYZE MY RESUME</span>
+                                <span className="relative z-10 text-lg">🔍</span>
+                            </button>
                         </div>
+
                         {toast.show && (
                             <Toast
                                 message={toast.message}
@@ -143,7 +157,7 @@ const handleRoast = async () => {
                                 onClose={() => setToast({ ...toast, show: false })}
                             />
                         )}
-                        {/* The Disclaimer */}
+
                         <p className="mt-20 text-xs text-slate-500 text-center">
                             <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></span>
                             Powered by Groq AI (Free Tier).

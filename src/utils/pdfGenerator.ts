@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
+import { ResumeFormate } from '../types/resume';
 
-export const generatePDF = (data, resumeName = "Candidate") => {
+export const generatePDF = (data: ResumeFormate, resumeName: string = "Candidate"): void => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
@@ -75,7 +76,7 @@ export const generatePDF = (data, resumeName = "Candidate") => {
     yPos += 12;
 
     // Clean the text - REMOVE ALL EMOJIS AND SPECIAL CHARACTERS
-    const textContent = data.analysis || data.summary || "No analysis content available.";
+    const textContent = data.summary || "No analysis content available.";
     
     const cleanAnalysis = textContent
         .replace(/#{1,6}\s+/g, "") // Remove markdown headers
@@ -97,7 +98,7 @@ export const generatePDF = (data, resumeName = "Candidate") => {
     doc.setFont("helvetica", "normal");
     doc.setTextColor(51, 65, 85);
 
-    lines.forEach((line) => {
+    lines.forEach((line: string) => {
         if (!line.trim()) {
             yPos += 3;
             return;
@@ -148,7 +149,7 @@ export const generatePDF = (data, resumeName = "Candidate") => {
 };
 
 // Footer function
-function addFooter(doc, pageWidth, pageHeight) {
+function addFooter(doc: jsPDF, pageWidth: number, pageHeight: number) {
     const footerY = pageHeight - 12;
     
     doc.setDrawColor(203, 213, 225);
@@ -159,6 +160,6 @@ function addFooter(doc, pageWidth, pageHeight) {
     doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
     
-    const pageNum = doc.internal.getCurrentPageInfo().pageNumber;
+    const pageNum = (doc.internal as any).getCurrentPageInfo().pageNumber;
     doc.text(`Page ${pageNum}`, pageWidth / 2, footerY, { align: "center" });
 }

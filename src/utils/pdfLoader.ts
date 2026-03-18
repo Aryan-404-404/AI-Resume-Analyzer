@@ -1,10 +1,11 @@
 import * as pdfjsLib from 'pdfjs-dist';
 
 // 1. SETUP THE WORKER
+// @ts-ignore
 import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
-export const extractTextFromPDF = async (file) => {
+export const extractTextFromPDF = async (file: File) => {
     try {
         let text = ""
         // converting file to ArrayBuffer (binary form 0's and 1's)
@@ -16,7 +17,7 @@ export const extractTextFromPDF = async (file) => {
         for (let i = 1; i <= pdf.numPages; i++) {
             const page = await pdf.getPage(i);
             const textContent = await page.getTextContent();
-            const pageText = textContent.items.map((item) => item.str).join(" ")
+            const pageText = textContent.items.map((item: any) => 'str' in item ? item.str : '').join(" ")
             text += pageText + "\n"
         }
         return text;
