@@ -1,34 +1,39 @@
-import { React, useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { extractTextFromPDF } from '../utils/pdfLoader'
 
-const FileDragDrop = ({ onTextExtract, label = "Upload Resume" }) => {
+interface FileDragDropPropes{
+    onTextExtract: (text: string)=> void,
+    label: string
+}
+
+const FileDragDrop = ({ onTextExtract, label = "Upload Resume" }: FileDragDropPropes) => {
     const [isLoading, setIsLoading] = useState(false)
     const [fileName, setFileName] = useState("")
     const [isDragging, setIsDragging] = useState(false)
     const [error, setError] = useState("")
 
-    const fileInputRef = useRef(null);
-    const handleDragOver = (e) => {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault()
         setIsDragging(true)
     }
     const handleDragLeave = () => {
         setIsDragging(false)
     }
-    const handleDrop = async(e) => {
+    const handleDrop = async(e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault()
         setIsDragging(false)
         const file = e.dataTransfer.files[0];
         await processFile(file);
     }
     const handleClick = () => {
-        fileInputRef.current.click();
+        fileInputRef.current?.click();
     }
-    const handleFileSelect = async (e) => {
-        const file = e.target.files[0];
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
         await processFile(file);
     }
-    const processFile = async (file) => {
+    const processFile = async (file: File | undefined) => {
         if (!file) return
         if (file.type !== "application/pdf") {
             setError("❌ Only PDF files are supported!");

@@ -1,4 +1,4 @@
-export const customPrompt = (resumeText, jobText) => {
+export const customPrompt = (resumeText: string, jobText: string): string => {
     return `
 You are a strict ATS system and Senior Hiring Manager.
 Analyze the resume against the job description and provide a harsh, honest assessment.

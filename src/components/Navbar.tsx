@@ -1,4 +1,4 @@
-import {React, useState} from 'react'
+import { useState} from 'react'
 import Help from './Help'
 
 const Navbar = () => {
